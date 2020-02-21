@@ -2,30 +2,63 @@
 A Simple Webserver that serves files from the local directory and subdirectories
 Author: Abindu Dhar
 """
+from http import HTTPStatus
 from http.server import HTTPServer, BaseHTTPRequestHandler
-import os, time
+import os, time, json, argparse
 import threading
 
 class RequestHandler(BaseHTTPRequestHandler):
     def do_GET(self):
         """Handles HTTP GET Requests from Client
         """
-        thread_name =  threading.currentThread().getName()
-        print(f"In Thread: {thread_name}")
-        if self.path.endswith("/"):
-            file_to_open = "Error 403: Directory Access is Forbidden, specify a file to fetch"
-            self.send_response(403)
-        else:
+        path = os.getcwd()+self.path
+        #thread_name =  threading.currentThread().getName()
+        #print(f"In Thread: {thread_name}")
+        if os.path.isdir(path):
+            self.list_directory(path)
+            return None
+        elif os.path.isfile(path):
             try:
-                with open(self.path[1:]) as f:
-                    file_to_open = f.read()
+                with open(path, 'r') as f:
+                    file_content = f.read()
                 self.send_response(200)
             except IOError:
-                file_to_open = "Error 404: File Not Found!"
+                file_content = "Error 404: File Not Found!"
                 self.send_response(404)
+        else:
+            file_content = "Error 404: File Not Found!"
+            self.send_response(404)
         self.end_headers()
-        self.wfile.write(bytes(file_to_open,'utf-8'))
+        self.wfile.write(bytes(file_content,'utf-8'))
         return
+
+    def _get_directory_list_file_type(self, path):
+        """Check if given relative path has a file or directory
+        """
+        if os.path.isfile(path):
+            return 'file'
+        if os.path.isdir(path):
+            return 'dir'
+        return 'unknown'
+
+    def list_directory(self, path):
+        try:
+            dir_content = os.listdir(path)
+        except OSError:
+            self.send_response(403) # Forbidden?
+            self.send_error(HTTPStatus.NOT_FOUND, "Could not list directory")
+            return None
+
+        ret = {fn: self._get_directory_list_file_type(os.path.join(path, fn))
+               for fn in dir_content}
+
+        encoded = json.dumps(ret, sort_keys=True).encode('utf-8')
+        self.send_response(HTTPStatus.OK)
+        self.send_header("Content-type", "text/json; charset=utf-8")
+        self.send_header("Content-Length", str(len(encoded)))
+        self.end_headers()
+        self.wfile.write(bytes("Contents of the requested directory: ",'utf-8'))
+        self.wfile.write(encoded)
 
 class ThreadedHTTPServer(HTTPServer):
     """Spawn a new thread for each new request
@@ -68,9 +101,13 @@ class ThreadedHTTPServer(HTTPServer):
                 for thread in threads:
                     thread.join()
 
+
 def main():
+    parser = argparse.ArgumentParser(prog='webserver.py')
+    parser.add_argument('--port', type=int, default=8080, help="The port to listen on")
+    args = parser.parse_args()
+    port = args.port
     try:
-        port = 8080
         server = ThreadedHTTPServer(('', port), RequestHandler)
         print(f"Starting HTTP Server, running on port: {port}. Use CTRL+C to stop...")
         server.serve_forever()
