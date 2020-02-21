@@ -26,7 +26,7 @@ class RequestHandler(BaseHTTPRequestHandler):
                 file_content = "Error 404: File Not Found!"
                 self.send_response(404)
         else:
-            file_content = "Error 404: File Not Found!"
+            file_content = "Error 404: Not Found!"
             self.send_response(404)
         self.end_headers()
         self.wfile.write(bytes(file_content,'utf-8'))
