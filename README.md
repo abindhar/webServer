@@ -10,3 +10,9 @@ This HTTP file server processes incoming requests using multithreading. This ena
 
 To start the server from command line
 python3 server.py <port>
+
+
+# Authentication
+
+Basic form of authentication for a user requesting file access in the form of basic HTTP Authentication.
+Client sends a request containing a header field in the form of Authorization: Basic <credentials>
