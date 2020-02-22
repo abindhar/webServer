@@ -31,7 +31,7 @@ def test_get():
     check_get_response("/samplexml", HTTPStatus.OK, '{"example1.xml": "file"}')
     check_get_response("/articles/a/b/a/", HTTPStatus.OK, '{"Abatasa.html": "file"}')
     check_get_response("/sampledir/", HTTPStatus.OK, '{"1.txt": "file", "10.txt": "file", "2.txt": "file", "3.txt": "file", "4.txt": "file", "5.txt": "file", "6.txt": "file", "7.txt": "file", "8.txt": "file", "9.txt": "file"}')
-
+    print("PASSED: All test_get() tests")
 
 def test_sequential_access():
     url = "http://localhost:8080"  + "/" + "articles/a/b/a/Abatasa.html"
@@ -40,8 +40,9 @@ def test_sequential_access():
     for _ in range(num_requests):
         r = requests.get(url)
     elapsed = round(time.time() - start, 3)
+    print("PASSED: All test_sequential_access() tests")
     print(f"Time taken for {num_requests} serial accesses: {elapsed}")
-    assert False
+    
 
 async def concurrent_requests():
     with concurrent.futures.ThreadPoolExecutor(max_workers=20) as executor:
@@ -56,5 +57,6 @@ def test_concurrent_access():
     start = time.time()
     loop.run_until_complete(concurrent_requests())
     elapsed = round(time.time() - start, 3)
+    print("PASSED: All test_concurrent_access() tests")
     print(f"Time taken for {num_con_requests} concurrent accesses: {elapsed}")
-    assert False
+    
