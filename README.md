@@ -23,4 +23,4 @@ The test.py file has several test cases.
 # Testing Usage
 
 To run tests from command line:
-$pytest test.py
+$ pytest test.py -s
