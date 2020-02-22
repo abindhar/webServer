@@ -12,14 +12,12 @@ class RequestHandler(BaseHTTPRequestHandler):
         """Handles HTTP GET Requests from Client
         """
         path = os.getcwd()+self.path
-        #thread_name =  threading.currentThread().getName()
-        #print(f"In Thread: {thread_name}")
         if os.path.isdir(path):
             self.list_directory(path)
             return None
         elif os.path.isfile(path):
             try:
-                with open(path, 'r') as f:
+                with open(path, 'r', errors='ignore') as f:
                     file_content = f.read()
                 self.send_response(200)
             except IOError:
@@ -32,7 +30,7 @@ class RequestHandler(BaseHTTPRequestHandler):
         self.wfile.write(bytes(file_content,'utf-8'))
         return
 
-    def _get_directory_list_file_type(self, path):
+    def _get_file_type(self, path):
         """Check if given relative path has a file or directory
         """
         if os.path.isfile(path):
@@ -45,19 +43,18 @@ class RequestHandler(BaseHTTPRequestHandler):
         try:
             dir_content = os.listdir(path)
         except OSError:
-            self.send_response(403) # Forbidden?
+            self.send_response(403)
             self.send_error(HTTPStatus.NOT_FOUND, "Could not list directory")
             return None
 
-        ret = {fn: self._get_directory_list_file_type(os.path.join(path, fn))
-               for fn in dir_content}
+        ret = {x: self._get_file_type(os.path.join(path, x))
+               for x in dir_content}
 
         encoded = json.dumps(ret, sort_keys=True).encode('utf-8')
-        self.send_response(HTTPStatus.OK)
+        self.send_response(200)
         self.send_header("Content-type", "text/json; charset=utf-8")
         self.send_header("Content-Length", str(len(encoded)))
         self.end_headers()
-        self.wfile.write(bytes("Contents of the requested directory: ",'utf-8'))
         self.wfile.write(encoded)
 
 class ThreadedHTTPServer(HTTPServer):
