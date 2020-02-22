@@ -10,6 +10,8 @@ from http import HTTPStatus
 import requests
 
 def check_get_response(path, expected_status, expected_text = None):
+    """Compare HTTP status code and response
+    """
     url = "http://localhost:8080"  + "/" + path
     if expected_status != HTTPStatus.OK and expected_text is not None:
         raise Exception('Text should not be specified when status is not 200')
@@ -19,6 +21,8 @@ def check_get_response(path, expected_status, expected_text = None):
         assert expected_text == r.text
 
 def test_get():
+    """Sanity test cases for the server
+    """
     # Invalid Files / Directory Access
     check_get_response("/invalid_dir/", HTTPStatus.NOT_FOUND)
     check_get_response("/invalidfile.html", HTTPStatus.NOT_FOUND)
@@ -34,6 +38,8 @@ def test_get():
     print("PASSED: All test_get() tests")
 
 def test_sequential_access():
+    """Time Sequential GET requests to the server
+    """
     url = "http://localhost:8080"  + "/" + "articles/a/b/a/Abatasa.html"
     start = time.time()
     num_requests = 20
@@ -45,6 +51,8 @@ def test_sequential_access():
     
 
 async def concurrent_requests():
+    """Concurrent request generator
+    """
     with concurrent.futures.ThreadPoolExecutor(max_workers=20) as executor:
         url = "http://localhost:8080"  + "/" + "articles/a/b/a/Abatasa.html"
         loop = asyncio.get_event_loop()
@@ -52,6 +60,8 @@ async def concurrent_requests():
         await asyncio.gather(*futures)
 
 def test_concurrent_access():
+    """Time concurrent get requests to the server
+    """
     num_con_requests = 20
     loop = asyncio.get_event_loop()
     start = time.time()
