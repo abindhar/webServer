@@ -70,6 +70,9 @@ class ThreadedHTTPServer(HTTPServer):
         """
         try:
             self.finish_request(request, client_address)
+        except BrokenPipeError:
+            # Handle socket error due to SIGCHILD event
+            print("Remote client disconnected")
         except Exception:
             self.handle_error(request, client_address)
         finally:
