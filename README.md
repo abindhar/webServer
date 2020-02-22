@@ -24,3 +24,16 @@ The test.py file has several test cases.
 
 To run tests from command line:
 $ pytest test.py -s
+
+# Performance Benchmarking
+
+$ wrk -t12 -c400 -d30s http://localhost:8080/index.html
+Running 30s test @ http://localhost:8080/index.html
+  12 threads and 400 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    24.66ms  109.11ms   1.95s    95.64%
+    Req/Sec    70.27     86.43   787.00     86.20%
+  13623 requests in 30.05s, 2.66MB read
+  Socket errors: connect 0, read 13623, write 0, timeout 35
+Requests/sec:    453.41
+Transfer/sec:     90.77KB
