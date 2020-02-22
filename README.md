@@ -9,7 +9,9 @@ This HTTP file server processes incoming requests using multithreading. This ena
 # Usage
 
 To start the server from command line:
+```
 $ python3 webserver.py
+```
 
 The server listens on port 8080 for incoming requests. To specify another port use cli argument --port. For cli help use -h.
 
@@ -23,7 +25,9 @@ The test.py file has several test cases.
 # Testing Usage
 
 To run tests from command line:
+```
 $ pytest test.py -s
+```
 
 # Performance Benchmarking
 ```
