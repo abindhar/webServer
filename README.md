@@ -26,7 +26,7 @@ To run tests from command line:
 $ pytest test.py -s
 
 # Performance Benchmarking
-
+```
 $ wrk -t12 -c400 -d30s http://localhost:8080/index.html
 Running 30s test @ http://localhost:8080/index.html
   12 threads and 400 connections
@@ -37,3 +37,4 @@ Running 30s test @ http://localhost:8080/index.html
   Socket errors: connect 0, read 13623, write 0, timeout 35
 Requests/sec:    453.41
 Transfer/sec:     90.77KB
+```
