@@ -30,6 +30,9 @@ $ pytest test.py -s
 ```
 
 # Performance Benchmarking
+
+Check the performance of the server with 400 simultaneous Http sessions over 12 threads.
+
 ```
 $ wrk -t12 -c400 -d30s http://localhost:8080/index.html
 Running 30s test @ http://localhost:8080/index.html
@@ -42,3 +45,5 @@ Running 30s test @ http://localhost:8080/index.html
 Requests/sec:    453.41
 Transfer/sec:     90.77KB
 ```
+
+The server processes ~453 requests per second.
