@@ -3,7 +3,7 @@
 A multithreaded webserver that serves files over HTTP. Supports following operations:
 1. GET file_path: Returns content of the file_path relative to the directory the server was started on.
 2. GET dir_path: Returns contents of the directory relative to the directory the server was started on in a json encoding. The results are sorted by file/dir name. 
-Currently a POST request is not supported. A POST request will return an Not Implemented HTTP error 501.
+3. Currently a POST/CONNECT/... request is not supported. Such a request will return an Not Implemented HTTP error 501.
 
 # Design/Architecture
 
