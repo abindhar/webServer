@@ -8,12 +8,15 @@ This HTTP file server processes incoming requests using multithreading. This ena
 
 # Usage
 
+The server listens on port 8080 (default) for incoming requests. 
+To specify another port use cli argument --port. 
+For cli help use -h.
 To start the server from command line:
 ```
 $ python3 webserver.py
+$ python3 webserver.py --port <port>
+$ python3 webserver.py -h
 ```
-
-The server listens on port 8080 for incoming requests. To specify another port use cli argument --port. For cli help use -h.
 
 # Testing
 
@@ -27,6 +30,10 @@ The test.py file has several test cases.
 To run tests from command line:
 ```
 $ pytest test.py -s
+```
+To run a specific test from command line:
+```
+$ pytest test.py::test_get -s
 ```
 
 # Performance Benchmarking
